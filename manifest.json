@@ -1,0 +1,9 @@
+{
+  "plugin_id": "chronicle.plugin.lastfm",
+  "name": "Last.fm",
+  "version": "1.0.0",
+  "author": "thegoddamnbeckster",
+  "entry_type": "metadata",
+  "min_chronicle_version": "1.0.0",
+  "supported_media_types": ["music", "album", "artist"]
+}
