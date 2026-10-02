@@ -1,12 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <AssemblyName>Chronicle.Plugin.LastFM</AssemblyName>
     <RootNamespace>Chronicle.Plugin.LastFM</RootNamespace>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="../../Chronicle/src/Chronicle.Plugins/Chronicle.Plugins.csproj" />
+    <!-- Private="false" / ExcludeAssets="runtime" keeps Chronicle.Plugins and Chronicle.Core out of
+         the plugin output so PluginLoadContext falls through to the host's copies (see the
+         MusicBrainz plugin's csproj for the full explanation). -->
+    <ProjectReference Include="..\Chronicle\src\Chronicle.Plugins\Chronicle.Plugins.csproj"
+                      Private="false"
+                      ExcludeAssets="runtime" />
+    <ProjectReference Include="..\Chronicle\src\Chronicle.Core\Chronicle.Core.csproj"
+                      Private="false"
+                      ExcludeAssets="runtime" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="tests/**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="manifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
