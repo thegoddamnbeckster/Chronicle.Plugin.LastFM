@@ -1,9 +1,9 @@
 {
   "plugin_id": "chronicle.plugin.lastfm",
   "name": "Last.fm",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Chronicle Contributors",
-  "description": "Fetches music metadata from Last.fm: artist biographies, album and track info, community tags, listener and play counts, and similar artists. Requires a free Last.fm API key.",
+  "description": "Fetches music metadata from Last.fm (biographies, album and track info, tags, listener and play counts, similar artists) and imports your own Last.fm play history. Requires a free Last.fm API key; history import also needs your Last.fm username.",
   "min_chronicle_version": "0.1.0",
   "entry_type": "Chronicle.Plugin.LastFM.LastFmMetadataProvider",
   "fixMatchHint": "Enter a Last.fm URL (https://www.last.fm/music/Radiohead) or a typed ID: artist:Radiohead · album:Radiohead/OK Computer · track:Radiohead/Karma Police",

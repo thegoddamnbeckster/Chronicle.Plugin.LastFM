@@ -24,7 +24,7 @@ public sealed class LastFmMetadataProvider : IMetadataProvider, IDisposable
 
     public string PluginId => LastFmClient.PluginId;
     public string Name     => "Last.fm";
-    public string Version  => "1.0.0";
+    public string Version  => "1.1.0";
     public string Author   => "Chronicle Contributors";
 
     // ── Settings keys ─────────────────────────────────────────────────────────
