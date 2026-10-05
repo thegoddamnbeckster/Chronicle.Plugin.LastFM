@@ -157,7 +157,9 @@ public class LastFmProviderTests
 
         var results = await TestClient.Provider(handler).SearchAsync(ctx);
 
-        Assert.Equal(100, Assert.Single(results).Score);
+        var only = Assert.Single(results);
+        Assert.Equal(100, only.Score);
+        Assert.True(only.IdentifierMatch);   // confirmed by the id, so the host skips its name-overlap check
         Assert.Equal("a74b1b7f-71a5-4011-9441-d0b5e4122711",
             StubHandler.ParamOf(new HttpRequestMessage(HttpMethod.Get, handler.Requests[0]), "mbid"));
     }

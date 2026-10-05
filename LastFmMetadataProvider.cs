@@ -268,7 +268,7 @@ public sealed class LastFmMetadataProvider : IMetadataProvider, IDisposable
     private static ScoredCandidate Score(MediaSearchContext ctx, Candidate c)
     {
         if (c.Bonus >= 100)
-            return new ScoredCandidate(c.Meta, 100, c.BonusReason);
+            return new ScoredCandidate(c.Meta, 100, c.BonusReason) { IdentifierMatch = true };
 
         int score = 0;
         var reasons = new List<string>();
