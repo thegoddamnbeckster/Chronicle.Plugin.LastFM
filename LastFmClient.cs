@@ -59,6 +59,17 @@ internal sealed class LastFmClient : IDisposable
             using var response = await _http.GetAsync(url, ct).ConfigureAwait(false);
             var body = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
 
+            if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+            {
+                // Last.fm's documented limit: honour Retry-After (capped), retry, then report a rate limit so the host pauses.
+                if (attempt >= maxRetries)
+                    throw new HttpRequestException("Last.fm is rate limiting requests", null, System.Net.HttpStatusCode.TooManyRequests);
+                var wait = response.Headers.RetryAfter?.Delta is { } ra && ra > TimeSpan.Zero ? (ra > TimeSpan.FromSeconds(30) ? TimeSpan.FromSeconds(30) : ra) : delay;
+                await Task.Delay(wait, ct).ConfigureAwait(false);
+                delay = NextDelay(delay);
+                continue;
+            }
+
             if (!TryParse(body, out var parsed))
             {
                 // Not JSON at all (gateway page, HTML error). Transient on 5xx, fatal otherwise.
@@ -96,6 +107,8 @@ internal sealed class LastFmClient : IDisposable
                     await Task.Delay(delay, ct).ConfigureAwait(false);
                     delay = NextDelay(delay);
                     continue;
+                case 29:
+                    throw new HttpRequestException("Last.fm rate limit exceeded", null, System.Net.HttpStatusCode.TooManyRequests);
                 default:
                     throw new HttpRequestException(
                         $"Last.fm error {code} for {method}: {message}");
