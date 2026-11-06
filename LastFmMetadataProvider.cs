@@ -24,7 +24,7 @@ public sealed class LastFmMetadataProvider : IMetadataProvider, IDisposable
 
     public string PluginId => LastFmClient.PluginId;
     public string Name     => "Last.fm";
-    public string Version  => "1.1.0";
+    public string Version  => System.Reflection.CustomAttributeExtensions.GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(typeof(LastFmMetadataProvider).Assembly)?.InformationalVersion.Split('+')[0] ?? "1.1.1";
     public string Author   => "Chronicle Contributors";
 
     // ── Settings keys ─────────────────────────────────────────────────────────
@@ -374,11 +374,8 @@ public sealed class LastFmMetadataProvider : IMetadataProvider, IDisposable
 
     // ── IMetadataProvider: image / health ─────────────────────────────────────
 
-    public async Task<byte[]> GetImageAsync(string url, CancellationToken ct = default)
-    {
-        EnsureConfigured();
-        return await _client!.GetBytesAsync(url, ct).ConfigureAwait(false);
-    }
+    public Task<byte[]> GetImageAsync(string url, CancellationToken ct = default)
+        => throw new NotSupportedException("Images are loaded by the browser straight from the address in the metadata; this plugin has nothing to fetch.");
 
     public async Task<bool> HealthCheckAsync(CancellationToken ct = default)
     {

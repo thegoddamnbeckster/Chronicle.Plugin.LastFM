@@ -42,7 +42,7 @@ public sealed class LastFmImportProvider : IImportProvider
 
     public string PluginId    => LastFmClient.PluginId;
     public string Name        => "Last.fm";
-    public string Version     => "1.1.0";
+    public string Version     => System.Reflection.CustomAttributeExtensions.GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>(typeof(LastFmImportProvider).Assembly)?.InformationalVersion.Split('+')[0] ?? "1.1.1";
     public string Author      => "Chronicle Contributors";
     public string Description => "Imports your Last.fm listening history (scrobbles) as plays of your music library.";
 
