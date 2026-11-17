@@ -63,7 +63,8 @@ internal sealed class LastFmClient : IDisposable
             {
                 // Last.fm's documented limit: honour Retry-After (capped), retry, then report a rate limit so the host pauses.
                 if (attempt >= maxRetries)
-                    throw new HttpRequestException("Last.fm is rate limiting requests", null, System.Net.HttpStatusCode.TooManyRequests);
+                    throw WithRetryAfter(new HttpRequestException("Last.fm is rate limiting requests", null, System.Net.HttpStatusCode.TooManyRequests),
+                                         response.Headers.RetryAfter?.Delta);
                 var wait = response.Headers.RetryAfter?.Delta is { } ra && ra > TimeSpan.Zero ? (ra > TimeSpan.FromSeconds(30) ? TimeSpan.FromSeconds(30) : ra) : delay;
                 await Task.Delay(wait, ct).ConfigureAwait(false);
                 delay = NextDelay(delay);
@@ -151,6 +152,17 @@ internal sealed class LastFmClient : IDisposable
         {
             return false;
         }
+    }
+
+
+    /// <summary>
+    /// Says how long the provider asked clients to wait, on the exception, under the key Chronicle's queue reads
+    /// (<c>Data["RetryAfter"]</c>, a TimeSpan): the host never waits less, and an item held for a long time goes to the back of the queue.
+    /// </summary>
+    private static HttpRequestException WithRetryAfter(HttpRequestException ex, TimeSpan? after)
+    {
+        if (after is { } a && a > TimeSpan.Zero) ex.Data["RetryAfter"] = a;
+        return ex;
     }
 
     private static TimeSpan NextDelay(TimeSpan d) =>

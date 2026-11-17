@@ -48,6 +48,7 @@ public class SecretProofTests
         var client = new Chronicle.Plugin.LastFM.LastFmClient(new HttpClient(h), Key, TimeSpan.Zero);
         var ex = await Assert.ThrowsAsync<HttpRequestException>(() => client.GetAsync("artist.getinfo", [new("artist", "x")]));
         Assert.Equal(HttpStatusCode.TooManyRequests, ex.StatusCode);
+        Assert.Equal(TimeSpan.FromMilliseconds(1), ex.Data["RetryAfter"]);   // what Last.fm asked for, so Chronicle's queue holds the item that long
         Assert.DoesNotContain(Key, ex.ToString());
         Assert.True(h.Calls <= 6, $"asked {h.Calls} times");
     }
