@@ -2,6 +2,11 @@
 
 [Last.fm](https://www.last.fm/) metadata provider plugin for [Chronicle](https://github.com/thegoddamnbeckster/Chronicle).
 
+> **Development status: discontinued (2026-11-18).** Last.fm announced that from 1 December 2026 API access requires a
+> paid pro licence, so this plugin is no longer maintained and is not built or tested with Chronicle any more. The work
+> here is complete and working as of version 1.1.2, and Chronicle's plugin interfaces are unchanged. If you hold a
+> licence and want to carry it on, you are welcome to fork the repository and continue development.
+
 Adds artist biographies, album and track write-ups, community tags, listener and play counts, similar
 artists, album cover art and album track listings to Chronicle's music library. It supplements
 MusicBrainz (which keeps titles and identity); it does not replace it.
